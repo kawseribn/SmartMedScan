@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+     <!-- Navigation Bar -->
+     <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('patient_home') }}">Patient Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('patient_profile') }}">My Profile</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('patient_home') }}">My Home</a>
+                </li> -->
+            </ul>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </nav>
+    <div class="container mt-4">
+        <h1 class="mb-3">Find a Doctor</h1>
+
+        <!-- Search Form -->
+        <form method="GET" class="mb-4">
+            <div class="form-group">
+                <input type="text" class="form-control" name="specialization" placeholder="Enter specialization (e.g., Cardiology)">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+
+        <!-- Doctors List -->
+        <ul class="list-group">
+            {% for doctor in doctors %}
+                <li class="list-group-item">
+                    {{ doctor.name }} - {{ doctor.specialization }}
+                    <button onclick="showAppointmentModal('{{ doctor.id }}')" class="btn btn-success float-right">Book Appointment</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal" id="appointmentModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Available Time Slots</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="timeSlots">
+                    <!-- Time slots will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form method="POST" action="{{ url_for('book_appointment') }}" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookingModalLabel">Book Appointment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="doctorId" name="doctor_id" value="">
+          <div class="form-group">
+            <label for="timeSlot">Select Time Slot</label>
+            <select id="timeSlot" name="time_slot" class="form-control">
+              <!-- Time slots will be populated here -->
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Book Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script>
+    function showAppointmentModal(doctorId) {
+      $('#doctorId').val(doctorId);
+      // Fetch available time slots for the doctor and populate the select dropdown
+      fetch('/get_available_time_slots/' + doctorId)
+        .then(response => response.json())
+        .then(data => {
+          const timeSlotSelect = document.getElementById('timeSlot');
+          timeSlotSelect.innerHTML = '';
+          data.forEach(slot => {
+            const option = document.createElement('option');
+            option.value = slot.id;
+            option.textContent = slot.time;
+            timeSlotSelect.appendChild(option);
+          });
+          $('#bookingModal').modal('show');
+        });
+    }
+  </script>
+    // <!-- Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- JavaScript for Modal -->
+    <script>
+    function showAppointmentModal(doctorId) {
+    fetch(`/get_available_time_slots/${doctorId}`)
+        .then(response => response.json())
+        .then(data => {
+            // Clear previous time slots
+            const timeSlotSelect = document.getElementById('timeSlot');
+            timeSlotSelect.innerHTML = '';
+
+            // Populate new time slots
+            data.forEach(slot => {
+                const option = document.createElement('option');
+                option.value = slot;
+                option.textContent = slot;
+                timeSlotSelect.appendChild(option);
+            });
+
+            // Show the modal
+            $('#bookingModal').modal('show');
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+</script>
+
+</body>
+</html>
+

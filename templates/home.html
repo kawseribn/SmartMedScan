@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>SmartMedScan Home</title>
+</head>
+<body>
+    <h1>Welcome to SmartMedScan</h1>
+
+    <!-- Only show upload form if no image has been uploaded yet -->
+    {% if not image_path %}
+    <h2>Upload Medical Report Image</h2>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*">
+        <button type="submit">Upload Image</button>
+    </form>
+    {% endif %}
+
+    <!-- Show the uploaded image -->
+    {% if image_path %}
+    <img src="{{ url_for('static', filename='uploads/' ~ image_path.split('/')[-1]) }}" alt="Uploaded Image" style="max-width: 500px;">
+    {% endif %}
+
+    <!-- Show extract text button only if image has been uploaded and text not yet extracted -->
+    {% if image_path and not extracted_text %}
+    <form method="post">
+        <button type="submit" name="extract_text">Extract Text</button>
+    </form>
+    {% endif %}
+
+    <!-- Show extracted text and allow to ask a question -->
+    {% if extracted_text %}
+    <h2>Extracted Text</h2>
+    <p>{{ extracted_text }}</p>
+    <form method="post">
+        <input type="text" name="question" placeholder="Ask a question based on the text above">
+        <button type="submit" name="ask_question">Get Answer</button>
+    </form>
+    {% endif %}
+
+    <!-- Display answer and allow to ask more questions -->
+    {% if answer %}
+    <h2>Answer</h2>
+    <p>{{ answer }}</p>
+    <form method="post">
+        <input type="text" name="question" placeholder="Ask another question">
+        <button type="submit" name="ask_question">Get Answer</button>
+    </form>
+    {% endif %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>

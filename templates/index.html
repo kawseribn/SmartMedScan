@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>SmartMedScan</title>
+  </head>
+  <body>
+    <h1>SmartMedScan: Medical Report Analysis</h1>
+
+    <h2>Registration/Login</h2>
+    <form method="post">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit" name="register">Register</button>
+      <button type="submit" name="login">Login</button>
+    </form>
+
+    <h2>Upload Medical Report Image</h2>
+    <form method="post" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*">
+      <button type="submit">Upload and Extract Text</button>
+    </form>
+
+    <h2>Question Answering with MiniBERT</h2>
+    <form method="post">
+      <textarea name="context" placeholder="Enter the context here"></textarea>
+      <input type="text" name="question" placeholder="What is your question?">
+      <button type="submit">Get Answer</button>
+    </form>
+  </body>
+</html>
