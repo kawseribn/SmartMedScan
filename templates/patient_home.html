@@ -31,43 +31,60 @@
         </div>
         <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
     </nav>
-    <!-- Div for appointments -->
-    
+
     <div class="container mt-4">
-        <!-- Image Upload Form with Preview -->
-        <form method="post" enctype="multipart/form-data" class="mb-3">
-            <div class="appointments-container">
-                <h2>Your Appointments</h2>
-                {% if appointments %}
-                    <ul>
-                        {% for appointment in appointments %}
-                            <li>
-                                <strong>Date:</strong> {{ appointment.date }}<br>
-                                <strong>Time:</strong> {{ appointment.time_slot }}<br>
-                                <strong>Doctor:</strong> {{ appointment.name }} ({{ appointment.specialization }})
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No appointments booked.</p>
-                {% endif %}
-            </div>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Div for appointments -->
+        <div class="appointments-container mb-3">
+            <h2>Your Appointments</h2>
+            {% if appointments %}
+                <ul>
+                    {% for appointment in appointments %}
+                        <li>
+                            <strong>Date:</strong> {{ appointment.date }}<br>
+                            <strong>Time:</strong> {{ appointment.time_slot }}<br>
+                            <strong>Doctor:</strong> {{ appointment.name }} ({{ appointment.specialization }})
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No appointments booked.</p>
+            {% endif %}
+        </div>
+
+        <!-- Combined Image Upload and Text Extraction Form -->
+        <form method="post" enctype="multipart/form-data">
             <div class="form-group">
-                <input type="file" name="image" accept="image/*" class="form-control-file" id="imageInput" onchange="showPreviewAndExtractButton()">
+                <input type="file" name="image" accept="image/*" class="form-control-file" id="imageInput" onchange="showPreview()">
             </div>
-            
+            <button type="submit" name="extract_text" class="btn btn-success">Upload and Extract Text</button>
         </form>
 
         <!-- Image Preview -->
         <div id="imagePreviewArea" style="display: none;">
             <h2>Uploaded Image:</h2>
             <img id="imagePreview" class="image-preview mb-3" alt="Image Preview">
-            <form method="post" id="extractTextForm">
-                <button type="submit" name="extract_text" class="btn btn-success">Extract Text</button>
-            </form>
         </div>
 
-        <!-- ... existing content for extracted text and Q&A ... -->
+        <!-- Display Extracted Text -->
+        {% if extracted_text %}
+            <h2>Extracted Text:</h2>
+            <p>{{ extracted_text }}</p>
+        {% endif %}
+
+        <!-- Display Summary -->
+        {% if summary %}
+            <h2>Summary:</h2>
+            <p>{{ summary }}</p>
+        {% endif %}
 
     </div>
 
@@ -77,7 +94,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        function showPreviewAndExtractButton() {
+        function showPreview() {
             var input = document.getElementById('imageInput');
             var imagePreviewArea = document.getElementById('imagePreviewArea');
             var imagePreview = document.getElementById('imagePreview');
@@ -92,5 +109,9 @@
             }
         }
     </script>
+    <script>
+        window.addEventListener("beforeunload", function() {
+            navigator.sendBeacon('/clear_session_data');
+        });
+    </script>
 </body>
-</html>

@@ -1,15 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SmartMedScan</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Welcome Admin</h1>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">SmartMedScan Admin</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="#">Dashboard <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="#">Users</a>
+                <a class="nav-item nav-link" href="#">Doctors</a>
+                <a class="nav-item nav-link" href="#">Appointments</a>
+                <a class="nav-item nav-link" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
 
-    <p>Manage users, view system logs, and perform administrative tasks.</p>
+    <div class="container mt-4">
+        <h1 class="mb-4">Admin Dashboard</h1>
+        <div class="row">
+            <!-- Users Card -->
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Total Users</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ users_count }}</h5>
+                        <a href="/add_user" class="btn btn-light">Add User</a>
+                        <a href="/view_users" class="btn btn-light">View/Delete Users</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Doctors Card -->
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Total Doctors</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ doctors_count }}</h5>
+                        <a href="/add_doctor" class="btn btn-light">Add Doctor</a>
+                        <a href="/view_doctors" class="btn btn-light">View/Delete Doctors</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Appointments Card -->
+            <div class="col-md-3">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-header">Total Appointments</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ appointments_count }}</h5>
+                        <a href="/add_appointment" class="btn btn-light">Add Appointment</a>
+                        <a href="/view_appointments" class="btn btn-light">View/Delete Appointments</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Add administrative functionalities -->
-
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <!-- Bootstrap JS and its dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -2,15 +2,45 @@
 <html lang="en">
 <head>
     <title>Register</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Register for SmartMedScan</h1>
-    <form method="post">
-        <input type="text" name="new_username" placeholder="New Username" required>
-        <input type="password" name="new_password" placeholder="New Password" required>
-        <input type="role" name="role" placeholder="Secret Code" required>
+    <div class="container mt-4">
+        <h1>Register for SmartMedScan</h1>
+        <form method="post" class="mt-3">
+            <div class="form-group">
+                <input type="text" name="new_username" class="form-control" placeholder="New Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" name="new_password" class="form-control" placeholder="New Password" required>
+            </div>
+            <div class="form-group">
+                <label for="roleSelect">Role</label>
+                <select class="form-control" id="roleSelect" name="role" required>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
 
-        <button type="submit">Register</button>
-    </form>
+            <!-- Fields for doctor's name and specialization -->
+            <div class="form-group">
+                <label for="doctorName">Doctor Name</label>
+                <input type="text" class="form-control" id="doctorName" name="doctor_name" placeholder="Enter doctor's name">
+            </div>
+            <div class="form-group">
+                <label for="specialization">Specialization</label>
+                <input type="text" class="form-control" id="specialization" name="specialization" placeholder="Enter specialization">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
