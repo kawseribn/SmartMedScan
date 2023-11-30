@@ -222,6 +222,43 @@ def patient_home():
                            answer=answer, 
                            appointments=appointments)
 
+@app.route('/patient_home_test', methods=['GET', 'POST'])
+def patient_home_t():
+
+    extracted_text = session.get('extracted_text', '')
+    summary = session.get('summary', '')
+    answer = session.get('answer', '')
+    image_path = session.get('image_path', '')
+
+    if request.method == 'POST':
+        if 'image' in request.files:
+            image_file = request.files['image']
+            if image_file and is_image_file(image_file.filename):
+                filename = secure_filename(image_file.filename)
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_file.save(image_path)
+
+                extracted_text = extract_text(image_path)
+                if extracted_text:
+                    summary = summarize_text(extracted_text)
+                    session['extracted_text'] = extracted_text
+                    session['summary'] = summary
+                    print("Extracted Text: ", extracted_text)  # Debug print
+                    print("Summary: ", summary)  # Debug print
+                else:
+                    flash('Failed to extract text from image', 'error')
+            else:
+                flash('Invalid file format', 'error')
+        else:
+            flash('No file selected', 'error')
+
+    # Add debug prints to check session variables
+    print("Session Extracted Text: ", session.get('extracted_text', 'No text'))
+    print("Session Summary: ", session.get('summary', 'No summary'))
+    session.pop('extracted_text', None)
+    session.pop('summary', None)
+    x= jsonify({'extracted_text': extracted_text, 'summary': summary})
+    return x
 
 def get_doctors_list():
     conn = get_db_connection()
